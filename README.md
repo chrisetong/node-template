@@ -13,6 +13,7 @@
 - 关键操作审计，默认不记录密码、Token 与请求正文；
 - 系统设置：网站名称、登录页 Logo/背景图/描述、备案文字与链接；Logo 自动复用为 favicon；
 - 系统设置图片走独立受权限保护的上传接口，不与业务附件混用；
+- 上传文件按用途与 `APP_TIME_ZONE` 日期归档，例如 `uploads/system-setting/2026-07-29/<UUID>.png`；
 - 单业务 Docker 镜像包含 Vue、NestJS、内部 Nginx 与 Supervisor；MySQL、Redis 和上传卷由 Compose 管理；
 - 支持同一台 Docker 主机部署多套独立实例：数据库、Redis 前缀、端口、卷和 Compose 项目名均可隔离。
 

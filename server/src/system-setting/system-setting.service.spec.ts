@@ -6,7 +6,7 @@ const singleton: SystemSetting = {
   id: 1,
   siteName: 'Example',
   loginLogoPath:
-    '/uploads/system-setting/123e4567-e89b-12d3-a456-426614174000.png',
+    '/uploads/system-setting/2026-07-29/123e4567-e89b-12d3-a456-426614174000.png',
   loginDescription: null,
   loginBackgroundPath: null,
   filingText: null,
@@ -30,7 +30,7 @@ describe('SystemSettingService', () => {
     await expect(service.getPublic()).resolves.toEqual({
       siteName: 'Example',
       loginLogoPath:
-        '/uploads/system-setting/123e4567-e89b-12d3-a456-426614174000.png',
+        '/uploads/system-setting/2026-07-29/123e4567-e89b-12d3-a456-426614174000.png',
       loginDescription: null,
       loginBackgroundPath: null,
       filingText: null,
@@ -63,12 +63,12 @@ describe('SystemSettingService', () => {
     const updated = await service.update({
       siteName: '  ',
       loginLogoPath:
-        'https://assets.example.com/uploads/system-setting/123e4567-e89b-12d3-a456-426614174000.png',
+        'https://assets.example.com/uploads/system-setting/2026-07-29/123e4567-e89b-12d3-a456-426614174000.png',
     });
 
     expect(updated.siteName).toBeNull();
     expect(updated.loginLogoPath).toBe(
-      '/uploads/system-setting/123e4567-e89b-12d3-a456-426614174000.png',
+      '/uploads/system-setting/2026-07-29/123e4567-e89b-12d3-a456-426614174000.png',
     );
     expect(cache.del).toHaveBeenCalledWith('system-setting:public');
   });
@@ -82,5 +82,32 @@ describe('SystemSettingService', () => {
     await expect(
       service.update({ loginLogoPath: '/uploads/general.png' }),
     ).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('accepts existing system-setting image paths without a date directory', async () => {
+    const service = new SystemSettingService(
+      {
+        systemSetting: {
+          upsert: jest
+            .fn()
+            .mockImplementation(({ create, update }) =>
+              Promise.resolve({ ...singleton, ...create, ...update }),
+            ),
+        },
+      } as never,
+      { del: jest.fn() } as never,
+    );
+
+    await expect(
+      service.update({
+        loginLogoPath:
+          '/uploads/system-setting/123e4567-e89b-12d3-a456-426614174000.png',
+      }),
+    ).resolves.toEqual(
+      expect.objectContaining({
+        loginLogoPath:
+          '/uploads/system-setting/123e4567-e89b-12d3-a456-426614174000.png',
+      }),
+    );
   });
 });

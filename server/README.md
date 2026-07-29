@@ -6,7 +6,7 @@ NestJS 11 + Prisma API，核心模块包括：
 - `user`、`role`、`menu`：多角色 RBAC 与安全转授权；
 - `department`、`data-scope`：部门树和服务端数据范围；
 - `audit`：不记录请求正文的结构化操作审计；
-- `file`：鉴权、大小、MIME 和文件魔数校验后的本地上传。
+- `file`：鉴权、大小、MIME 和文件魔数校验后的本地上传；按 `general/YYYY-MM-DD/` 归档。
 - `system-setting`：强类型单例视觉设置、公开只读接口、RBAC 管理接口和专用图片上传。
 
 数据权限接入方式，以及启动、迁移、Seed、代理边界说明见根目录 `README.md`。
