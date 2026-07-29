@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum DataScope {
+  ALL
+  CUSTOM
+  DEPARTMENT
+  DEPARTMENT_AND_CHILDREN
+  SELF
+}
+
+model User {
+  id              Int         @id @default(autoincrement())
+  username        String      @unique @db.VarChar(32)
+  password        String      @db.VarChar(255)
+  enabled         Boolean     @default(true)
+  departmentId    Int?
+  tokenVersion    Int         @default(1)
+  passwordVersion Int         @default(1)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  department      Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  roles           UserRole[]
+  auditLogs       AuditLog[]
+
+  @@index([enabled])
+  @@index([departmentId])
+}
+
+model Role {
+  id              Int              @id @default(autoincrement())
+  code            String           @unique @db.VarChar(50)
+  name            String           @db.VarChar(80)
+  enabled         Boolean          @default(true)
+  isSuper         Boolean          @default(false)
+  dataScope       DataScope        @default(SELF)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  users           UserRole[]
+  menus           RoleMenu[]
+  dataDepartments RoleDepartment[]
+
+  @@index([enabled])
+}
+
+model Department {
+  id        Int              @id @default(autoincrement())
+  code      String           @unique @db.VarChar(50)
+  name      String           @db.VarChar(80)
+  parentId  Int?
+  sort      Int              @default(0)
+  enabled   Boolean          @default(true)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  parent    Department?      @relation("DepartmentTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children  Department[]     @relation("DepartmentTree")
+  users     User[]
+  roles     RoleDepartment[]
+
+  @@index([parentId, sort])
+  @@index([enabled])
+}
+
+model RoleDepartment {
+  roleId       Int
+  departmentId Int
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, departmentId])
+  @@index([departmentId])
+}
+
+model UserRole {
+  userId Int
+  roleId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([roleId])
+}
+
+model Menu {
+  id          Int        @id @default(autoincrement())
+  name        String     @db.VarChar(50)
+  path        String     @unique @db.VarChar(120)
+  component   String     @default("") @db.VarChar(120)
+  icon        String     @default("CircleDot") @db.VarChar(50)
+  parentId    Int?
+  sort        Int        @default(0)
+  permissions Json?
+  parent      Menu?      @relation("MenuToChildren", fields: [parentId], references: [id])
+  children    Menu[]     @relation("MenuToChildren")
+  roles       RoleMenu[]
+
+  @@index([parentId, sort])
+}
+
+model RoleMenu {
+  roleId Int
+  menuId Int
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  menu   Menu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, menuId])
+  @@index([menuId])
+}
+
+model AuditLog {
+  id         BigInt   @id @default(autoincrement())
+  actorId    Int?
+  actorName  String?  @db.VarChar(32)
+  action     String   @db.VarChar(80)
+  resource   String   @db.VarChar(80)
+  resourceId String?  @db.VarChar(80)
+  method     String   @db.VarChar(10)
+  path       String   @db.VarChar(255)
+  ip         String   @db.VarChar(64)
+  userAgent  String?  @db.VarChar(255)
+  statusCode Int
+  success    Boolean
+  durationMs Int
+  createdAt  DateTime @default(now())
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
+  @@index([success, createdAt])
+  @@index([createdAt])
+}
+
+model SystemSetting {
+  id                  Int      @id @default(1)
+  siteName            String?  @db.VarChar(100)
+  loginLogoPath       String?  @db.VarChar(255)
+  loginDescription    String?  @db.VarChar(500)
+  loginBackgroundPath String?  @db.VarChar(255)
+  filingText          String?  @db.VarChar(200)
+  filingUrl           String?  @db.VarChar(500)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}

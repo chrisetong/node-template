@@ -1,0 +1,28 @@
+{
+  "name": "node-template",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "packageManager": "pnpm@10.8.0",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @node-template/server --filter @node-template/admin dev",
+    "dev:server": "pnpm --dir server dev",
+    "dev:admin": "pnpm --dir admin dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm --dir server lint && pnpm --dir admin exec vue-tsc -b --pretty false",
+    "test": "pnpm --dir server test",
+    "db:generate": "pnpm --dir server db:generate",
+    "db:migrate": "pnpm --dir server db:migrate",
+    "db:seed": "pnpm --dir server db:seed",
+    "db:sync": "pnpm --dir server db:sync",
+    "infra:up": "docker compose --env-file server/.env -f server/docker-compose.yml up -d db redis",
+    "infra:down": "docker compose --env-file server/.env -f server/docker-compose.yml down",
+    "prod:config": "docker compose --env-file server/.env.production -f server/docker-compose.yml config",
+    "prod:build": "docker compose --env-file server/.env.production -f server/docker-compose.yml build app",
+    "prod:migrate": "docker compose --env-file server/.env.production -f server/docker-compose.yml --profile tools run --rm migrate",
+    "prod:seed": "docker compose --env-file server/.env.production -f server/docker-compose.yml --profile tools run --rm seed",
+    "prod:up": "docker compose --env-file server/.env.production -f server/docker-compose.yml up -d db redis app",
+    "prod:logs": "docker compose --env-file server/.env.production -f server/docker-compose.yml logs -f --tail=200 app",
+    "prod:down": "docker compose --env-file server/.env.production -f server/docker-compose.yml down"
+  }
+}

@@ -1,0 +1,47 @@
+# Dependencies and generated output
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+coverage/
+**/coverage/
+*.tsbuildinfo
+
+# Environment files and local secrets. Keep safe templates under version control.
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+.envrc
+
+# Runtime data
+server/logs/
+server/public/uploads/
+backups/
+*.log
+*.pid
+*.pid.lock
+
+# Certificates, key stores, database dumps and Docker image archives
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.sql.gz
+*.tar
+*.tar.gz
+
+# Local tooling and OS files
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+docker-compose.override.yml

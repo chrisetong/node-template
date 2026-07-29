@@ -1,0 +1,145 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    command:
+      [
+        "mysqld",
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+        "--default-time-zone=+08:00",
+      ]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?set MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER:?set MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD}
+    ports:
+      - "${MYSQL_BIND_ADDRESS:-127.0.0.1}:${MYSQL_HOST_PORT:-3306}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?set REDIS_PASSWORD}
+    ports:
+      - "${REDIS_BIND_ADDRESS:-127.0.0.1}:${REDIS_HOST_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  app:
+    image: ${APP_IMAGE:-node-template-app:local}
+    restart: unless-stopped
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
+        VITE_APP_BASE: ${VITE_APP_BASE:-/admin/}
+    environment:
+      NODE_ENV: production
+      DEPLOYMENT_ID: ${DEPLOYMENT_ID:?set DEPLOYMENT_ID}
+      TZ: Asia/Shanghai
+      APP_TIME_ZONE: ${APP_TIME_ZONE:-Asia/Shanghai}
+      DB_TIME_ZONE: ${DB_TIME_ZONE:-+08:00}
+      PORT: 3000
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-2h}
+      CORS_ORIGIN: ${CORS_ORIGIN:?set CORS_ORIGIN}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?set REDIS_PASSWORD}
+      CACHE_NAMESPACE: ${CACHE_NAMESPACE:?set CACHE_NAMESPACE}
+      PASSWORD_MIN_LENGTH: ${PASSWORD_MIN_LENGTH:-12}
+      BCRYPT_COST: ${BCRYPT_COST:-12}
+      LOGIN_FAIL_LIMIT: ${LOGIN_FAIL_LIMIT:-5}
+      LOGIN_LOCK_SECONDS: ${LOGIN_LOCK_SECONDS:-900}
+      CAPTCHA_TTL_SECONDS: ${CAPTCHA_TTL_SECONDS:-300}
+      AUDIT_RETENTION_DAYS: ${AUDIT_RETENTION_DAYS:-180}
+      TRUST_PROXY_HOPS: ${TRUST_PROXY_HOPS:-0}
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:3000}
+      ASSET_BASE_URL: ${ASSET_BASE_URL:-http://localhost:3000}
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
+    ports:
+      - "${ADMIN_BIND_ADDRESS:-127.0.0.1}:${ADMIN_PORT:-8080}:80"
+    labels:
+      com.node-template.deployment: ${DEPLOYMENT_ID:?set DEPLOYMENT_ID}
+    volumes:
+      - app_uploads:/app/server/public/uploads
+      - app_logs:/app/server/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost/healthz >/dev/null && curl --fail --silent http://localhost/api/health >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  migrate:
+    image: ${APP_IMAGE:-node-template-app:local}
+    profiles: ["tools"]
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
+        VITE_APP_BASE: ${VITE_APP_BASE:-/admin/}
+    command:
+      [
+        "./node_modules/.bin/prisma",
+        "migrate",
+        "deploy",
+        "--schema",
+        "prisma/schema.prisma",
+      ]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  seed:
+    image: ${APP_IMAGE:-node-template-app:local}
+    profiles: ["tools"]
+    command:
+      [
+        "./node_modules/.bin/ts-node",
+        "--transpile-only",
+        "prisma/seed.ts",
+      ]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
+      BCRYPT_COST: ${BCRYPT_COST:-12}
+      SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME:-admin}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+volumes:
+  db_data:
+  redis_data:
+  app_uploads:
+  app_logs:

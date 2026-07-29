@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-50: #eef6ff;
+  --brand-100: #d9eaff;
+  --brand-500: #2f74dc;
+  --brand-600: #2462bd;
+  --brand-700: #1d4f9a;
+  --surface: #ffffff;
+  --surface-soft: #f6f8fb;
+  --surface-raised: #ffffff;
+  --text: #172033;
+  --text-secondary: #5d6a7d;
+  --text-muted: #8a96a8;
+  --border: #e3e8ef;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.03), 0 8px 24px rgba(16, 24, 40, 0.05);
+  --sidebar-width: 240px;
+  --el-color-primary: var(--brand-600);
+  --el-border-radius-base: var(--radius-sm);
+  --el-font-size-base: 14px;
+  color-scheme: light;
+}
+
+.dark {
+  --surface: #111722;
+  --surface-soft: #0c111a;
+  --surface-raised: #171e2a;
+  --text: #edf2f8;
+  --text-secondary: #aab4c3;
+  --text-muted: #788598;
+  --border: #283242;
+  --shadow-card: 0 12px 36px rgba(0, 0, 0, 0.22);
+  --el-bg-color: var(--surface-raised);
+  --el-bg-color-overlay: var(--surface-raised);
+  --el-fill-color-blank: var(--surface-raised);
+  --el-text-color-primary: var(--text);
+  --el-text-color-regular: var(--text-secondary);
+  --el-border-color: var(--border);
+  color-scheme: dark;
+}
+
+@layer base {
+  html,
+  body,
+  #app {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC",
+      "Source Han Sans SC", system-ui, -apple-system, sans-serif;
+    @apply antialiased;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  :focus-visible {
+    outline: 3px solid rgba(47, 116, 220, 0.35);
+    outline-offset: 2px;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .page-shell { @apply w-full space-y-5; }
+  .page-header { @apply flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between; }
+  .page-title { @apply text-2xl font-semibold tracking-tight; color: var(--text); }
+  .page-description { @apply mt-1.5 max-w-3xl text-sm leading-6; color: var(--text-secondary); }
+  .page-actions { @apply flex flex-wrap items-center gap-2; }
+  .panel {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+  .query-panel { @apply panel flex flex-col gap-3 p-4 sm:flex-row sm:items-end; }
+  .table-panel { @apply panel overflow-hidden; }
+  .table-scroll { @apply w-full overflow-x-auto; }
+  .data-table { @apply w-full min-w-[760px] border-collapse text-left text-sm; }
+  .data-table th { @apply whitespace-nowrap px-5 py-3 text-xs font-semibold; color: var(--text-secondary); background: var(--surface-soft); }
+  .data-table td { @apply px-5 py-3.5; border-top: 1px solid var(--border); }
+  .data-table tbody tr { transition: background .15s ease; }
+  .data-table tbody tr:hover { background: color-mix(in srgb, var(--brand-50) 45%, transparent); }
+  .empty-state { @apply px-6 py-14 text-center text-sm; color: var(--text-muted); }
+  .field { @apply grid gap-2; }
+  .field label { @apply text-sm font-medium; color: var(--text); }
+  .field-hint { @apply text-xs leading-5; color: var(--text-muted); }
+  .app-input {
+    @apply h-11 w-full px-3.5 text-sm transition;
+    color: var(--text);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .app-input:hover { border-color: #aeb9c8; }
+  .app-input:focus { border-color: var(--brand-500); outline: 3px solid rgba(47,116,220,.14); }
+  .app-button {
+    @apply inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap px-4 text-sm font-semibold transition disabled:pointer-events-none disabled:opacity-50;
+    border-radius: var(--radius-sm);
+    background: var(--brand-600);
+    color: white;
+  }
+  .app-button:hover { background: var(--brand-700); }
+  .app-button.secondary { background: var(--surface-raised); color: var(--text); border: 1px solid var(--border); }
+  .app-button.secondary:hover { background: var(--surface-soft); }
+  .status-pill { @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium; }
+  .status-pill.success { @apply bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300; }
+  .status-pill.muted { @apply bg-slate-100 text-slate-600 dark:bg-slate-700/40 dark:text-slate-300; }
+  .icon-button {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition disabled:opacity-50;
+    color: var(--text-secondary);
+  }
+  .icon-button:hover { background: var(--surface-soft); color: var(--text); }
+  .avatar {
+    @apply grid h-10 w-10 shrink-0 place-items-center rounded-xl text-sm font-bold;
+    background: var(--brand-100);
+    color: var(--brand-700);
+  }
+  .dark .avatar { background: rgba(47,116,220,.18); color: #9cc0ff; }
+  .avatar.small { @apply h-9 w-9 rounded-lg; }
+}
+
+.app-drawer .el-drawer__header { margin: 0; padding: 22px 24px 18px; border-bottom: 1px solid var(--border); }
+.app-drawer .el-drawer__body { padding: 0; overflow: hidden; }
+.app-drawer .el-drawer__footer { padding: 16px 24px; border-top: 1px solid var(--border); background: var(--surface-raised); }
+.app-drawer__heading { display: flex; width: 100%; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.app-drawer__heading h2 { margin: 0; color: var(--text); font-size: 18px; font-weight: 650; }
+.app-drawer__heading p { margin: 6px 0 0; color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
+.app-drawer__body { height: 100%; overflow-y: auto; padding: 24px; }
+.app-drawer__footer { display: flex; justify-content: flex-end; gap: 10px; }
+
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner { box-shadow: 0 0 0 1px var(--border) inset !important; }
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused { box-shadow: 0 0 0 1px var(--brand-500) inset, 0 0 0 3px rgba(47,116,220,.12) !important; }
+
+@media (max-width: 640px) {
+  .app-drawer__body { padding: 20px; }
+  .app-drawer .el-drawer__header { padding: 18px 20px 15px; }
+  .app-drawer .el-drawer__footer { padding: 12px 20px; }
+  .page-title { font-size: 21px; }
+}
