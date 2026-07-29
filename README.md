@@ -16,6 +16,22 @@
 - 单业务 Docker 镜像包含 Vue、NestJS、内部 Nginx 与 Supervisor；MySQL、Redis 和上传卷由 Compose 管理；
 - 支持同一台 Docker 主机部署多套独立实例：数据库、Redis 前缀、端口、卷和 Compose 项目名均可隔离。
 
+## 界面预览
+
+### 登录页
+
+![登录页预览](docs/preview/login.png)
+
+### 首页
+
+![首页预览](docs/preview/home.png)
+
+### 系统设置
+
+管理员可在系统设置中维护站点名称、登录页 Logo、描述、背景图与备案信息。
+
+![系统设置页预览](docs/preview/setting.png)
+
 ## 架构
 
 ```text
