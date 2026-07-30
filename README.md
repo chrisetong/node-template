@@ -19,6 +19,8 @@
 
 ## 界面预览
 
+在线交互演示：[https://chrisetong.github.io/node-template/](https://chrisetong.github.io/node-template/)
+
 ### 登录页
 
 ![登录页预览](docs/preview/login.png)
@@ -113,8 +115,6 @@ pnpm demo:build
 ```
 
 构建结果位于 `admin/dist-demo/`，可直接部署到任意静态目录。演示包使用 Hash 路由，不要求服务器配置 SPA 回退；登录页已预填演示账号，数据为浏览器内存中的 Mock 数据，刷新页面即恢复初始状态，绝不会请求真实 API 或写入真实数据。
-
-线上预览：[https://chrisetong.github.io/node-template/](https://chrisetong.github.io/node-template/)
 
 仓库另提供仅手动触发的 GitHub Pages 工作流。首次在仓库 `Settings → Pages` 将 Source 选择为 **GitHub Actions**，之后从 `Actions → Publish interactive demo → Run workflow` 发布即可；它不会在普通代码提交时自动运行。
 
