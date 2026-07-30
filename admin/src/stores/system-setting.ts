@@ -50,7 +50,9 @@ export function resolveAssetUrl(value: string): string {
     raw.startsWith("http://") ||
     raw.startsWith("https://") ||
     raw.startsWith("data:") ||
-    raw.startsWith("blob:")
+    raw.startsWith("blob:") ||
+    raw.startsWith("./") ||
+    raw.startsWith("../")
   ) {
     return raw;
   }
