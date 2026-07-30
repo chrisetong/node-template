@@ -34,7 +34,8 @@ let menus: MenuRow[] = [
   { id: 21, name: "界面设置", path: "/admin/system-settings", component: "admin/SystemSettings", icon: "Palette", parentId: 20, sort: 1, permissions: ["systemSetting:update"] },
   { id: 22, name: "操作记录", path: "/admin/audit-logs", component: "admin/AuditLogs", icon: "ScrollText", parentId: 20, sort: 2, permissions: [] },
 ];
-let systemSetting = { siteName: "澄序演示后台", loginLogoPath: "", loginDescription: "用于展示基础后台的页面、表格、抽屉与设置能力。", loginBackgroundPath: "", filingText: "交互演示 · 数据仅保存在当前浏览器会话", filingUrl: "" };
+// Keep every field empty so the demo uses the exact built-in login visual.
+let systemSetting = { siteName: "", loginLogoPath: "", loginDescription: "", loginBackgroundPath: "", filingText: "", filingUrl: "" };
 const roleMenuIds = new Map<number, number[]>([[2, [1, 10, 11, 12, 13]], [3, [1]]]);
 const logs = [
   { id: "log-001", actorName: "demo-admin", action: "SYSTEM_SETTING_UPDATE", resource: "systemSetting", resourceId: "1", method: "PATCH", path: "/system-setting", ip: "127.0.0.1", statusCode: 200, success: true, durationMs: 38, createdAt: "2026-07-30T02:18:00.000Z" },
