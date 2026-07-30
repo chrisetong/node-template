@@ -9,6 +9,7 @@ import {
 } from "lucide-vue-next";
 import { api } from "../../api";
 import { useAuthStore } from "../../stores/auth";
+import { isDemoMode } from "../../demo/mode";
 import { useSystemSettingStore } from "../../stores/system-setting";
 
 type LoginResponse = { accessToken: string };
@@ -73,7 +74,7 @@ async function loadCaptcha() {
     );
     captchaKey.value = data.key;
     captchaSvg.value = data.svg;
-    captchaCode.value = "";
+    captchaCode.value = isDemoMode ? "DEMO" : "";
   } catch {
     errorMessage.value = "验证码加载失败，请稍后重试";
   } finally {
@@ -112,6 +113,10 @@ async function onSubmit() {
 
 onMounted(() => {
   hydrateRemembered();
+  if (isDemoMode && !username.value) {
+    username.value = "demo-admin";
+    password.value = "Demo@123456";
+  }
   void loadCaptcha();
 });
 </script>
@@ -253,7 +258,6 @@ onMounted(() => {
         </form>
 
         <p v-if="systemSetting.isDefaultStyle" class="default-login-help">如需帮助，请联系你的业务负责人。</p>
-
         <footer v-if="systemSetting.setting.filingText" class="login-filing">
           <a
             v-if="systemSetting.setting.filingUrl"

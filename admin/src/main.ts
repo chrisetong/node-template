@@ -6,7 +6,9 @@ import "element-plus/dist/index.css";
 import "./style.css";
 import App from "./App.vue";
 import router from "./router";
-import { setupApiInterceptors } from "./api";
+import { api, setupApiInterceptors } from "./api";
+import { installDemoApi } from "./demo/mock-api";
+import { isDemoMode } from "./demo/mode";
 import { initTheme } from "./lib/theme";
 import { useAuthStore } from "./stores/auth";
 import { useSystemSettingStore } from "./stores/system-setting";
@@ -18,6 +20,7 @@ async function bootstrap() {
   app.use(pinia);
   app.use(ElementPlus, { locale: zhCn });
   app.use(router);
+  if (isDemoMode) installDemoApi(api);
 
   app.directive("permission", {
     mounted(el, binding) {

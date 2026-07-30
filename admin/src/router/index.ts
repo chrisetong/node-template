@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import { getAccessToken } from "../api";
+import { isDemoMode } from "../demo/mode";
 import { useAuthStore } from "../stores/auth";
 import { toast } from "../components/ui/toast";
 
@@ -55,7 +56,9 @@ function ensureDynamicRoutes(
 }
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: isDemoMode
+    ? createWebHashHistory(import.meta.env.BASE_URL)
+    : createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",

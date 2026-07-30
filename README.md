@@ -104,6 +104,18 @@ pnpm db:seed      # 初始化基础菜单、角色和管理员
 pnpm infra:down   # 停止本地 MySQL 与 Redis
 ```
 
+## 静态交互演示
+
+无需启动服务端或数据库，即可构建一套可点击浏览的后台演示包：
+
+```bash
+pnpm demo:build
+```
+
+构建结果位于 `admin/dist-demo/`，可直接部署到任意静态目录。演示包使用 Hash 路由，不要求服务器配置 SPA 回退；登录页已预填演示账号，数据为浏览器内存中的 Mock 数据，刷新页面即恢复初始状态，绝不会请求真实 API 或写入真实数据。
+
+仓库另提供仅手动触发的 GitHub Pages 工作流。首次在仓库 `Settings → Pages` 将 Source 选择为 **GitHub Actions**，之后从 `Actions → Publish interactive demo → Run workflow` 发布即可；它不会在普通代码提交时自动运行。
+
 ## 生产部署
 
 生产环境以一个 `node-template-app:<版本>` 业务镜像交付。镜像内包含后台静态资源、API、Nginx 和进程守护；生产服务器不需要编译业务代码。

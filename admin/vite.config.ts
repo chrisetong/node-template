@@ -6,9 +6,10 @@ import path from 'node:path'
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "")
   const defaultBase = command === "build" ? "/admin/" : "/"
+  const appBase = process.env.VITE_APP_BASE || env.VITE_APP_BASE || defaultBase
 
   return {
-    base: normalizeAppBase(env.VITE_APP_BASE || defaultBase),
+    base: normalizeAppBase(appBase),
     plugins: [vue()],
     resolve: {
       alias: {
@@ -31,5 +32,6 @@ export default defineConfig(({ command, mode }) => {
 function normalizeAppBase(value: string) {
   const trimmed = value.trim()
   if (!trimmed || trimmed === "/") return "/"
+  if (trimmed === "." || trimmed === "./") return "./"
   return `/${trimmed.replace(/^\/+|\/+$/g, "")}/`
 }

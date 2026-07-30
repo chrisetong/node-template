@@ -12,6 +12,7 @@ import { getAppliedTheme, toggleTheme } from "../lib/theme";
 import Breadcrumbs from "../components/common/Breadcrumbs.vue";
 import { resolveAppIcon } from "../lib/app-icons";
 import { useSystemSettingStore } from "../stores/system-setting";
+import { isDemoMode } from "../demo/mode";
 
 const router = useRouter();
 const route = useRoute();
@@ -160,7 +161,7 @@ onBeforeUnmount(() => window.removeEventListener("resize", updateViewport));
           </button>
           <div class="page-context">
             <Breadcrumbs />
-            <strong>{{ pageTitle }}</strong>
+            <div class="page-title-line"><strong>{{ pageTitle }}</strong><span v-if="isDemoMode" class="demo-badge">交互演示</span></div>
           </div>
         </div>
         <div class="topbar-actions">
@@ -209,7 +210,7 @@ onBeforeUnmount(() => window.removeEventListener("resize", updateViewport));
 .avatar{display:grid;width:38px;height:38px;flex:0 0 auto;place-items:center;border-radius:11px;background:var(--brand-100);color:var(--brand-700);font-size:14px;font-weight:700}.dark .avatar{background:rgba(47,116,220,.18);color:#9cc0ff}.avatar.small{width:34px;height:34px;border-radius:9px}
 .account-compact strong,.account-compact small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.account-compact strong{color:var(--text);font-size:13px}.account-compact small{margin-top:2px;color:var(--text-muted);font-size:11px}
 .layout-main{min-height:100vh;margin-left:var(--sidebar-width);transition:margin .2s ease}.topbar{position:sticky;top:0;z-index:30;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:color-mix(in srgb,var(--surface) 92%,transparent);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
-.topbar-left,.topbar-actions,.user-menu{display:flex;align-items:center}.topbar-left{gap:12px}.topbar-actions{gap:5px}.page-context{display:grid;gap:3px}.page-context strong{font-size:15px;color:var(--text)}
+.topbar-left,.topbar-actions,.user-menu,.page-title-line{display:flex;align-items:center}.topbar-left{gap:12px}.topbar-actions{gap:5px}.page-context{display:grid;gap:3px}.page-context strong{font-size:15px;color:var(--text)}.demo-badge{margin-left:8px;padding:2px 7px;border-radius:999px;background:var(--brand-50);color:var(--brand-700);font-size:10px;font-weight:650}.dark .demo-badge{background:rgba(47,116,220,.16);color:#9cc0ff}
 .user-menu{gap:9px;padding:5px 7px;border-radius:10px;color:var(--text-secondary)}.user-menu:hover{background:var(--surface-soft)}.user-menu-copy{display:grid;min-width:92px;text-align:left}.user-menu-copy strong{color:var(--text);font-size:13px}.user-menu-copy small{margin-top:1px;color:var(--text-muted);font-size:10px}
 .content-area{min-width:0;padding:26px 28px 40px}.sidebar-mask{position:fixed;inset:0;z-index:35;background:rgba(10,16,25,.52);backdrop-filter:blur(2px)}
 .is-collapsed .app-sidebar{width:72px}.is-collapsed .layout-main{margin-left:72px}.is-collapsed .brand-row{padding:0 18px}.is-collapsed .sidebar-nav{padding-inline:10px}.is-collapsed .nav-item{justify-content:center;padding:0}

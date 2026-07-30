@@ -8,6 +8,8 @@
     "dev": "pnpm --parallel --filter @node-template/server --filter @node-template/admin dev",
     "dev:server": "pnpm --dir server dev",
     "dev:admin": "pnpm --dir admin dev",
+    "demo:dev": "pnpm --dir admin exec vite --mode demo",
+    "demo:build": "pnpm --dir admin build:demo",
     "build": "pnpm -r build",
     "lint": "pnpm --dir server lint && pnpm --dir admin exec vue-tsc -b --pretty false",
     "test": "pnpm --dir server test",
