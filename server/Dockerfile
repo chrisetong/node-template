@@ -1,4 +1,4 @@
-FROM node:20-alpine AS server-builder
+FROM node:24-alpine AS server-builder
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ WORKDIR /app/server
 RUN pnpm exec prisma generate --schema prisma/schema.prisma
 RUN pnpm exec nest build
 
-FROM node:20-alpine AS admin-builder
+FROM node:24-alpine AS admin-builder
 
 WORKDIR /app
 
@@ -38,7 +38,7 @@ ENV VITE_APP_BASE=$VITE_APP_BASE
 WORKDIR /app/admin
 RUN pnpm build
 
-FROM node:20-alpine AS runner
+FROM node:24-alpine AS runner
 
 WORKDIR /app/server
 ENV NODE_ENV=production

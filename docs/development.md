@@ -2,7 +2,7 @@
 
 ## 环境要求
 
-- Node.js 20+
+- Node.js 24+
 - pnpm 10+
 - Docker Compose
 

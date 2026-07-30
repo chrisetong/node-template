@@ -4,6 +4,9 @@
   "private": true,
   "license": "MIT",
   "packageManager": "pnpm@10.8.0",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "pnpm --parallel --filter @node-template/server --filter @node-template/admin dev",
     "dev:server": "pnpm --dir server dev",

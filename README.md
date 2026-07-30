@@ -55,7 +55,7 @@
 
 ## 快速开始
 
-环境要求：Node.js 20+、pnpm 10+、Docker Compose。
+环境要求：Node.js 24+、pnpm 10+、Docker Compose。使用 nvm 时可在项目根目录执行 `nvm use` 读取 `.nvmrc`。
 
 ```bash
 pnpm install
@@ -113,6 +113,8 @@ pnpm demo:build
 ```
 
 构建结果位于 `admin/dist-demo/`，可直接部署到任意静态目录。演示包使用 Hash 路由，不要求服务器配置 SPA 回退；登录页已预填演示账号，数据为浏览器内存中的 Mock 数据，刷新页面即恢复初始状态，绝不会请求真实 API 或写入真实数据。
+
+线上预览：[https://chrisetong.github.io/node-template/](https://chrisetong.github.io/node-template/)
 
 仓库另提供仅手动触发的 GitHub Pages 工作流。首次在仓库 `Settings → Pages` 将 Source 选择为 **GitHub Actions**，之后从 `Actions → Publish interactive demo → Run workflow` 发布即可；它不会在普通代码提交时自动运行。
 
